@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+// Repo represents github repository from org
 type Repo struct {
 	Name string `json:"full_name"`
 }

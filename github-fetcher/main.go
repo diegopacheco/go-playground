@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -59,7 +61,33 @@ func getAllRepos(orgname string) []Repo {
 	return allRepos
 }
 
-// todo: 3 - persist result in FS
+func persistInDisk(path string, v interface{}) error {
+	if v == nil {
+		return nil
+	}
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	binary, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	_, err = io.Copy(f, bytes.NewReader(binary))
+	f.Close()
+	return err
+}
+
+func loadFromDisk(path string, v *[]Repo) error {
+	f, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	f.Close()
+	json.NewDecoder(f).Decode(&v)
+	return nil
+}
+
 // todo: 4 - make diff with previous FS and now
 func main() {
 	args := os.Args
@@ -67,10 +95,26 @@ func main() {
 		fmt.Println("ERROR! You need provide the name of the organization. ")
 		return
 	}
+
+	fmt.Println("Loading previous JSON from disk: ")
+	var allReposFromDisk []Repo
+	if loadFromDisk("/home/diego/github.fetcher/"+args[1]+".json", &allReposFromDisk) == nil {
+		fmt.Print("No Previous JSON in DISK.\n")
+	} else {
+		fmt.Println("JSON from disk:")
+		fmt.Println(allReposFromDisk)
+	}
+
 	fmt.Println("Fetching all repos for: " + args[1])
 	allRepos := getAllRepos(args[1])
 	for _, o := range allRepos {
 		fmt.Println(o.Name)
+	}
+
+	if persistInDisk("/home/diego/github.fetcher/"+args[1]+".json", allRepos) != nil {
+		fmt.Println("Json perssited in DISK!")
+	} else {
+		fmt.Println("JSON persisted in disk")
 	}
 
 }

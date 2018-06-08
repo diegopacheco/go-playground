@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 )
@@ -58,10 +59,16 @@ func getAllRepos(orgname string) []Repo {
 	return allRepos
 }
 
+// todo: 3 - persist result in FS
+// todo: 4 - make diff with previous FS and now
 func main() {
-	// todo: 3 - persist result in FS
-	// todo: 4 - make diff with previous FS and now
-	allRepos := getAllRepos("Netflix")
+	args := os.Args
+	if len(args) <= 1 {
+		fmt.Println("ERROR! You need provide the name of the organization. ")
+		return
+	}
+	fmt.Println("Fetching all repos for: " + args[1])
+	allRepos := getAllRepos(args[1])
 	for _, o := range allRepos {
 		fmt.Println(o.Name)
 	}

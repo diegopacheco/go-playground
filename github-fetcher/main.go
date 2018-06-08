@@ -89,7 +89,23 @@ func loadFromDisk(path string, v *[]Repo) error {
 	return nil
 }
 
-// todo: 4 - make diff with previous FS and now
+func diff(slice1 []Repo, slice2 []Repo) []Repo {
+	diffRepo := []Repo{}
+	m := map[Repo]int{}
+	for _, s1Val := range slice1 {
+		m[s1Val] = 1
+	}
+	for _, s2Val := range slice2 {
+		m[s2Val] = m[s2Val] + 1
+	}
+	for mKey, mVal := range m {
+		if mVal == 1 {
+			diffRepo = append(diffRepo, mKey)
+		}
+	}
+	return diffRepo
+}
+
 func main() {
 	args := os.Args
 	if len(args) <= 1 {
@@ -118,4 +134,7 @@ func main() {
 		fmt.Println("JSON persisted in disk")
 	}
 
+	diffRepo := diff(allReposFromDisk, allRepos)
+	fmt.Println("\n\n**** NEW REPOS **** ")
+	fmt.Println(diffRepo)
 }

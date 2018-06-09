@@ -114,7 +114,7 @@ func main() {
 		fmt.Println("| |  \\/_| |_| |__  _   _| |__   | |_ ___  ___| |_| |__   ___ _ __ ")
 		fmt.Println("| | __| | __| '_ \\| | | | '_ \\  |  _/ _ \\/ __| __| '_ \\ / _ \\ '__|")
 		fmt.Println("| |_\\ \\ | |_| | | | |_| | |_) | | ||  __/ (__| |_| | | |  __/ |   ")
-		fmt.Println("\\____/_|\\__|_| |_|\\__,_|_.__/  \\_| \\___|\\___|\\__|_| |_|\\___|_|    ")
+		fmt.Println(" \\____/_|\\__|_| |_|\\__,_|_.__/  \\_| \\___|\\___|\\__|_| |_|\\___|_|    ")
 		fmt.Println(" ")
 		fmt.Println("github-fecther: Fetch all repos from a organization and tell you the new repos! ")
 		fmt.Println("USAGE         : ./github-fecther Facebook")

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -17,5 +18,19 @@ func main() {
 	} else {
 		fmt.Println("Etcd Client connected")
 	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+
+	resPut, errPut := cli.Put(ctx, "x", "10")
+	if errPut != nil {
+		fmt.Println(errPut)
+	} else {
+		fmt.Printf("Put on ETCD : %s \n", resPut.OpResponse().Put())
+	}
+
+	x, _ := cli.Get(ctx, "x")
+	fmt.Printf("Get x from ETCD: %s \n", string(x.Kvs[0].Value))
+
+	cancel()
 	cli.Close()
 }

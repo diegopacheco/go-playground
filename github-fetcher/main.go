@@ -40,7 +40,7 @@ func extractRepos(page int, orgname string) ([]Repo, error) {
 	repos := make([]Repo, 0)
 	jsonErr := json.Unmarshal(body, &repos)
 	if jsonErr != nil {
-		fmt.Println("Error 4")
+		fmt.Println("Error 4 - Often this means we HIT rate limit of Github API")
 		return nil, jsonErr
 	}
 	return repos, nil

@@ -109,7 +109,16 @@ func diff(slice1 []Repo, slice2 []Repo) []string {
 func main() {
 	args := os.Args
 	if len(args) <= 1 {
-		fmt.Println("ERROR! You need provide the name of the organization. ")
+		fmt.Println(" _____ _ _   _           _      ______        _   _               ")
+		fmt.Println("|  __ (_) | | |         | |     |  ___|      | | | |              ")
+		fmt.Println("| |  \\/_| |_| |__  _   _| |__   | |_ ___  ___| |_| |__   ___ _ __ ")
+		fmt.Println("| | __| | __| '_ \\| | | | '_ \\  |  _/ _ \\/ __| __| '_ \\ / _ \\ '__|")
+		fmt.Println("| |_\\ \\ | |_| | | | |_| | |_) | | ||  __/ (__| |_| | | |  __/ |   ")
+		fmt.Println("\\____/_|\\__|_| |_|\\__,_|_.__/  \\_| \\___|\\___|\\__|_| |_|\\___|_|    ")
+		fmt.Println(" ")
+		fmt.Println("github-fecther: Fetch all repos from a organization and tell you the new repos! ")
+		fmt.Println("USAGE         : ./github-fecther Facebook")
+		fmt.Println("BY            : Diego Pacheco - 2018")
 		return
 	}
 

@@ -113,7 +113,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("Loading previous JSON from disk: ")
+	fmt.Println("1. Loading previous JSON from disk: ")
 	allReposFromDisk := make([]Repo, 0)
 	if loadFromDisk("/home/diego/github.fetcher/"+args[1]+".json", &allReposFromDisk) != nil {
 		fmt.Print("No Previous JSON in DISK.\n")
@@ -122,7 +122,7 @@ func main() {
 		fmt.Println(allReposFromDisk)
 	}
 
-	fmt.Println("Fetching all repos for: " + args[1])
+	fmt.Println("2. Fetching all repos for: " + args[1])
 	allRepos := getAllRepos(args[1])
 	for _, o := range allRepos {
 		fmt.Println(o.Name)
@@ -133,6 +133,6 @@ func main() {
 	}
 
 	diffRepo := diff(allReposFromDisk, allRepos)
-	fmt.Println("\n\n**** NEW REPOS **** ")
+	fmt.Println("\n\n3. **** NEW REPOS **** ")
 	fmt.Println(diffRepo)
 }

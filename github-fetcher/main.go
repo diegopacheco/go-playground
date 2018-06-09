@@ -48,7 +48,7 @@ func extractRepos(page int, orgname string) ([]Repo, error) {
 
 func getAllRepos(orgname string) []Repo {
 	var allRepos []Repo
-	pagination := 1
+	pagination := 0
 	for true {
 		repos, _ := extractRepos(pagination, orgname)
 		if len(repos) == 0 {
@@ -62,8 +62,8 @@ func getAllRepos(orgname string) []Repo {
 	return allRepos
 }
 
-func persistInDisk(path string, v interface{}) error {
-	if v == nil {
+func persistInDisk(path string, v []Repo) error {
+	if v == nil || len(v) == 0 {
 		return nil
 	}
 	f, err := os.Create(path)
@@ -89,14 +89,14 @@ func loadFromDisk(path string, v *[]Repo) error {
 	return nil
 }
 
-func diff(slice1 []Repo, slice2 []Repo) []Repo {
-	diffRepo := []Repo{}
-	m := map[Repo]int{}
+func diff(slice1 []Repo, slice2 []Repo) []string {
+	diffRepo := make([]string, 0)
+	m := map[string]int{}
 	for _, s1Val := range slice1 {
-		m[s1Val] = 1
+		m[s1Val.Name] = 1
 	}
 	for _, s2Val := range slice2 {
-		m[s2Val] = m[s2Val] + 1
+		m[s2Val.Name] = m[s2Val.Name] + 1
 	}
 	for mKey, mVal := range m {
 		if mVal == 1 {
@@ -114,8 +114,8 @@ func main() {
 	}
 
 	fmt.Println("Loading previous JSON from disk: ")
-	var allReposFromDisk []Repo
-	if loadFromDisk("/home/diego/github.fetcher/"+args[1]+".json", &allReposFromDisk) == nil {
+	allReposFromDisk := make([]Repo, 0)
+	if loadFromDisk("/home/diego/github.fetcher/"+args[1]+".json", &allReposFromDisk) != nil {
 		fmt.Print("No Previous JSON in DISK.\n")
 	} else {
 		fmt.Println("JSON from disk:")
@@ -128,10 +128,10 @@ func main() {
 		fmt.Println(o.Name)
 	}
 
-	if persistInDisk("/home/diego/github.fetcher/"+args[1]+".json", allRepos) != nil {
-		fmt.Println("Json perssited in DISK!")
+	if persistInDisk("/home/diego/github.fetcher/"+args[1]+".json", allRepos) == nil {
+		fmt.Println("JSON perssited in DISK!")
 	} else {
-		fmt.Println("JSON persisted in disk")
+		fmt.Println("JSON NOT persisted in disk")
 	}
 
 	diffRepo := diff(allReposFromDisk, allRepos)

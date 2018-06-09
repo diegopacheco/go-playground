@@ -84,8 +84,8 @@ func loadFromDisk(path string, v *[]Repo) error {
 	if err != nil {
 		return err
 	}
-	f.Close()
 	json.NewDecoder(f).Decode(&v)
+	f.Close()
 	return nil
 }
 

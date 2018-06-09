@@ -129,8 +129,6 @@ func main() {
 	}
 
 	if persistInDisk("/home/diego/github.fetcher/"+args[1]+".json", allRepos) == nil {
-		fmt.Println("JSON perssited in DISK!")
-	} else {
 		fmt.Println("JSON NOT persisted in disk")
 	}
 

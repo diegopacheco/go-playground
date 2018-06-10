@@ -40,7 +40,6 @@ func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", Index)
-	router.HandleFunc("/todos", Index)
 	router.HandleFunc("/todos/{todoId}", TodoShow)
 
 	var handler http.Handler
@@ -78,20 +77,16 @@ func TodoCreate(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 	}
-	t := RepoCreateTodo(todo)
+
+	currentId += 1
+	todo.Id = currentId
+	todos = append(todos, todo)
+
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(t); err != nil {
+	if err := json.NewEncoder(w).Encode(todo); err != nil {
 		panic(err)
 	}
-}
-
-//this is bad, I don't think it passes race condtions
-func RepoCreateTodo(t Todo) Todo {
-	currentId = currentId + 1
-	t.Id = currentId
-	todos = append(todos, t)
-	return t
 }
 
 // TodoShow is the main function called when / rest endpoint hits.

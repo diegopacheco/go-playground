@@ -28,6 +28,16 @@ var todos Todos
 var currentId int
 
 func main() {
+	todos = make([]Todo, 0)
+	currentId := 1
+	todos = append(todos, Todo{
+		Id:        currentId,
+		Name:      "TODO 1",
+		Completed: false,
+		Due:       time.Now(),
+	})
+	fmt.Printf("TODOS initialized %s \n", todos)
+
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", Index)
 	router.HandleFunc("/todos", Index)
@@ -78,7 +88,7 @@ func TodoCreate(w http.ResponseWriter, r *http.Request) {
 
 //this is bad, I don't think it passes race condtions
 func RepoCreateTodo(t Todo) Todo {
-	currentId += 1
+	currentId = currentId + 1
 	t.Id = currentId
 	todos = append(todos, t)
 	return t

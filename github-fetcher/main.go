@@ -48,7 +48,7 @@ func extractRepos(page int, orgname string) ([]Repo, error) {
 
 func getAllRepos(orgname string) []Repo {
 	var allRepos []Repo
-	pagination := 0
+	pagination := 1
 	for true {
 		repos, _ := extractRepos(pagination, orgname)
 		if len(repos) == 0 {

@@ -144,13 +144,20 @@ func main() {
 		fmt.Println(o.Name)
 	}
 
-	diffRepo := diff(allReposFromDisk, allRepos)
-	fmt.Println("\n\n3. **** NEW REPOS **** ")
-	fmt.Println(diffRepo)
-
-	if persistInDisk("/home/diego/github.fetcher/"+args[1]+".json", allRepos) != nil {
-		fmt.Println("JSON NOT persisted in disk")
+	if allRepos == nil || len(allRepos) == 0 {
+		fmt.Println("There are no repos on the WEB we will not proceed! ")
 	} else {
-		fmt.Println("JSON persisted in disk")
+
+		diffRepo := diff(allReposFromDisk, allRepos)
+		fmt.Println("\n\n3. **** NEW REPOS **** ")
+		fmt.Println(diffRepo)
+
+		if persistInDisk("/home/diego/github.fetcher/"+args[1]+".json", allRepos) != nil {
+			fmt.Println("JSON NOT persisted in disk")
+		} else {
+			fmt.Println("JSON persisted in disk")
+		}
+
 	}
+
 }

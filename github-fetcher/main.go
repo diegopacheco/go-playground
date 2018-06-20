@@ -90,18 +90,19 @@ func loadFromDisk(path string, v *[]Repo) error {
 }
 
 func diff(slice1 []Repo, slice2 []Repo) []string {
+	fmt.Print("Repos from DISK  : ")
+	fmt.Println(len(slice1))
+
+	fmt.Print("Repos from Github: ")
+	fmt.Println(len(slice2))
+
 	diffRepo := make([]string, 0)
 	m := map[string]int{}
 	for _, s1Val := range slice1 {
 		m[s1Val.Name] = 1
 	}
 	for _, s2Val := range slice2 {
-		_, ok := m[s2Val.Name]
-		if ok {
-			m[s2Val.Name] = m[s2Val.Name] + 1
-		} else {
-			m[s2Val.Name] = 1
-		}
+		m[s2Val.Name] = m[s2Val.Name] + 1
 	}
 	for mKey, mVal := range m {
 		if mVal == 1 {

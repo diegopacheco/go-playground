@@ -90,12 +90,6 @@ func loadFromDisk(path string, v *[]Repo) error {
 }
 
 func diff(slice1 []Repo, slice2 []Repo) []string {
-	fmt.Print("Repos from DISK  : ")
-	fmt.Println(len(slice1))
-
-	fmt.Print("Repos from Github: ")
-	fmt.Println(len(slice2))
-
 	diffRepo := make([]string, 0)
 	m := map[string]int{}
 	for _, s1Val := range slice1 {
@@ -107,8 +101,12 @@ func diff(slice1 []Repo, slice2 []Repo) []string {
 	for mKey, mVal := range m {
 		if mVal == 1 {
 			diffRepo = append(diffRepo, mKey)
+		} else {
+			fmt.Println("mVal is: {} key is: {}", mVal, mKey)
 		}
 	}
+	fmt.Print("Diff is: ")
+	fmt.Println(diffRepo)
 	return diffRepo
 }
 
@@ -148,6 +146,11 @@ func main() {
 	if allRepos == nil || len(allRepos) == 0 {
 		fmt.Println("There are no repos on the WEB we will not proceed! ")
 	} else {
+
+		fmt.Print("Repos from DISK  : ")
+		fmt.Println(len(allReposFromDisk))
+		fmt.Print("Repos from Github: ")
+		fmt.Println(len(allRepos))
 
 		diffRepo := diff(allReposFromDisk, allRepos)
 		fmt.Println("\n\n3. **** NEW REPOS **** ")

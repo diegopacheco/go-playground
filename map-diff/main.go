@@ -30,26 +30,22 @@ func diff(slice1 []Repo, slice2 []Repo) []string {
 }
 
 func main() {
-	repo1 := make([]Repo, 0)
-	repo2 := make([]Repo, 0)
+	repo1 := make([]Repo, 2)
+	repo2 := make([]Repo, 3)
 
 	repo1[0] = Repo{}
 	repo1[1] = Repo{}
-	repo1[2] = Repo{}
 
 	repo1[0].Name = "X"
 	repo1[1].Name = "Y"
-	repo1[2].Name = "Z"
 
 	repo2[0] = Repo{}
 	repo2[1] = Repo{}
 	repo2[2] = Repo{}
-	repo2[3] = Repo{}
 
 	repo2[0].Name = "X"
 	repo2[1].Name = "Y"
 	repo2[2].Name = "Z"
-	repo2[3].Name = "W"
 
 	diffRepo := diff(repo1, repo2)
 	fmt.Println(diffRepo)

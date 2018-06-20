@@ -102,7 +102,7 @@ func diff(slice1 []Repo, slice2 []Repo) []string {
 		if mVal == 1 {
 			diffRepo = append(diffRepo, mKey)
 		} else {
-			fmt.Printf("mVal is: {} key is: {} \n", mVal, mKey)
+			fmt.Printf("mVal is: %d key is: %s \n", mVal, mKey)
 		}
 	}
 	fmt.Print("Diff is: ")

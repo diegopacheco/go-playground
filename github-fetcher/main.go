@@ -101,12 +101,8 @@ func diff(slice1 []Repo, slice2 []Repo) []string {
 	for mKey, mVal := range m {
 		if mVal == 1 {
 			diffRepo = append(diffRepo, mKey)
-		} else {
-			fmt.Printf("mVal is: %d key is: %s \n", mVal, mKey)
 		}
 	}
-	fmt.Print("Diff is: ")
-	fmt.Println(diffRepo)
 	return diffRepo
 }
 
@@ -161,7 +157,5 @@ func main() {
 		} else {
 			fmt.Println("JSON persisted in disk")
 		}
-
 	}
-
 }

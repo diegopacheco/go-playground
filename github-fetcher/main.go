@@ -96,7 +96,12 @@ func diff(slice1 []Repo, slice2 []Repo) []string {
 		m[s1Val.Name] = 1
 	}
 	for _, s2Val := range slice2 {
-		m[s2Val.Name] = m[s2Val.Name] + 1
+		_, ok := m[s2Val.Name]
+		if ok {
+			m[s2Val.Name] = m[s2Val.Name] + 1
+		} else {
+			m[s2Val.Name] = 1
+		}
 	}
 	for mKey, mVal := range m {
 		if mVal == 1 {

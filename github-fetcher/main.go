@@ -128,7 +128,9 @@ func main() {
 		fmt.Print("No Previous JSON in DISK.\n")
 	} else {
 		fmt.Println("JSON from disk:")
-		fmt.Println(allReposFromDisk)
+		for _, o := range allReposFromDisk {
+			fmt.Println(o.Name)
+		}
 	}
 
 	fmt.Println("2. Fetching all repos for: " + args[1])
@@ -139,6 +141,8 @@ func main() {
 
 	if persistInDisk("/home/diego/github.fetcher/"+args[1]+".json", allRepos) == nil {
 		fmt.Println("JSON NOT persisted in disk")
+	} else {
+		fmt.Println("JSON persisted in disk")
 	}
 
 	diffRepo := diff(allReposFromDisk, allRepos)

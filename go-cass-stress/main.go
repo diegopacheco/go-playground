@@ -9,34 +9,38 @@ import (
 	"github.com/gocql/gocql"
 )
 
-const KEYSPACE_NAME = "stress"
-const KEYSPACE = "CREATE KEYSPACE stress WITH REPLICATION = " +
+// Keyspace Is the Cassandra Keyspace
+const Keyspace = "CREATE KEYSPACE stress WITH REPLICATION = " +
 	" { 'class' : 'SimpleStrategy', 'replication_factor' : 3 }; "
-const TABLE = "CREATE TABLE stress.TEST ( key text PRIMARY KEY, value text);"
-const INSERT = "INSERT INTO stress.TEST (key,value) VALUES ('?', '?');"
+
+// Table is the Table schema for cass
+const Table = "CREATE TABLE stress.TEST ( key text PRIMARY KEY, value text);"
+
+// Insert is the Insert command for cass
+const Insert = "INSERT INTO stress.TEST (key,value) VALUES ('?', '?');"
 
 func connect(host string) *gocql.Session {
 	cluster := gocql.NewCluster(host)
 	session, err := cluster.CreateSession()
 	if err != nil {
-		fmt.Errorf("Could not create session in CASS. Err: ", err)
+		fmt.Println("Could not create session in CASS. Err: ", err)
 	}
 	return session
 }
 
 func createKeyspace(session *gocql.Session) {
-	if err := session.Query(KEYSPACE).Exec(); err != nil {
-		fmt.Errorf("Could not create KEYSPACE in CASS. Err: ", err)
+	if err := session.Query(Keyspace).Exec(); err != nil {
+		fmt.Println("Could not create KEYSPACE in CASS. Err: ", err)
 	}
-	if err := session.Query(TABLE).Exec(); err != nil {
-		fmt.Errorf("Could not create TABLE in CASS. Err: ", err)
+	if err := session.Query(Table).Exec(); err != nil {
+		fmt.Println("Could not create TABLE in CASS. Err: ", err)
 	}
 }
 
 func insertRows(numRows int, session *gocql.Session) {
 	for i := 0; i < numRows; i++ {
-		if err := session.Query(INSERT, "K"+strconv.Itoa(i), "V"+strconv.Itoa(i)).Exec(); err != nil {
-			fmt.Errorf("Could not create INSERT in CASS. Err: ", err)
+		if err := session.Query(Insert, "K"+strconv.Itoa(i), "V"+strconv.Itoa(i)).Exec(); err != nil {
+			fmt.Println("Could not create INSERT in CASS. Err: ", err)
 		}
 	}
 }

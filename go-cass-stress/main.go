@@ -45,27 +45,25 @@ func insertRows(numRows int, session *gocql.Session) {
 	}
 }
 
-func parseRowsArg() int {
+func parseArgs() (string, int) {
 	rows := flag.Int("rows", 0, "Number of Records that you want to create in CASS. ")
+	host := flag.String("host", "127.0.0.1", "CASS host(ip) you want connect. ")
 	flag.Parse()
+
 	if *rows <= 0 {
 		fmt.Println("You need pass a possitive number of ROWS. i.e: -rows=100 ")
 		os.Exit(1)
 	}
 	fmt.Printf(" %d recods will be created in CASS. \n", *rows)
-	return *rows
-}
-
-func parseHostArg() string {
-	host := flag.String("host", "", "CASS host(ip) you want connect. ")
-	flag.Parse()
 	fmt.Printf(" Connecting to %s CASS. \n", *host)
-	return *host
+
+	return *host, *rows
 }
 
 func main() {
-	session := connect(parseHostArg())
+	host, rows := parseArgs()
+	session := connect(host)
 	createKeyspace(session)
-	insertRows(parseRowsArg(), session)
+	insertRows(rows, session)
 	defer session.Close()
 }

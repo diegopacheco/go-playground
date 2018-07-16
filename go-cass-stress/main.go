@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/gocql/gocql"
 )
@@ -17,10 +18,11 @@ const Keyspace = "CREATE KEYSPACE IF NOT EXISTS stress WITH REPLICATION = " +
 const Table = "CREATE TABLE IF NOT EXISTS stress.TEST ( key text PRIMARY KEY, value text);"
 
 // Insert is the Insert command for cass
-const Insert = "INSERT INTO stress.TEST (key,value) VALUES ('?', '?');"
+const Insert = "INSERT INTO stress.TEST (key,value) VALUES (?, ?);"
 
 func connect(host string) *gocql.Session {
 	cluster := gocql.NewCluster(host)
+	cluster.Consistency = gocql.Any
 	session, err := cluster.CreateSession()
 	if err != nil {
 		fmt.Println("Could not create session in CASS. Err: ", err)
@@ -38,11 +40,17 @@ func createKeyspace(session *gocql.Session) {
 }
 
 func insertRows(numRows int, session *gocql.Session) {
+	errCount := 0
+	okCount := 0
 	for i := 0; i < numRows; i++ {
 		if err := session.Query(Insert, "K"+strconv.Itoa(i), "V"+strconv.Itoa(i)).Exec(); err != nil {
 			fmt.Println("Could not create INSERT in CASS. Err: ", err)
+			errCount++
+		} else {
+			okCount++
 		}
 	}
+	fmt.Printf(" DONE. %d rows inserted, %d errors. \n", okCount, errCount)
 }
 
 func parseArgs() (string, int) {
@@ -61,9 +69,14 @@ func parseArgs() (string, int) {
 }
 
 func main() {
+	start := time.Now()
 	host, rows := parseArgs()
 	session := connect(host)
 	createKeyspace(session)
 	insertRows(rows, session)
 	defer session.Close()
+
+	elapsed := time.Since(start)
+	fmt.Printf(" go-cass-stress took %s to insert %d rows.\n", elapsed, rows)
+	fmt.Printf("FIN.\n")
 }

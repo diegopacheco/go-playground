@@ -10,11 +10,11 @@ import (
 )
 
 // Keyspace Is the Cassandra Keyspace
-const Keyspace = "CREATE KEYSPACE stress WITH REPLICATION = " +
+const Keyspace = "CREATE KEYSPACE IF NOT EXISTS stress WITH REPLICATION = " +
 	" { 'class' : 'SimpleStrategy', 'replication_factor' : 3 }; "
 
 // Table is the Table schema for cass
-const Table = "CREATE TABLE stress.TEST ( key text PRIMARY KEY, value text);"
+const Table = "CREATE TABLE IF NOT EXISTS stress.TEST ( key text PRIMARY KEY, value text);"
 
 // Insert is the Insert command for cass
 const Insert = "INSERT INTO stress.TEST (key,value) VALUES ('?', '?');"

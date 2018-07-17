@@ -22,7 +22,7 @@ const Insert = "INSERT INTO stress.TEST (key,value) VALUES (?, ?);"
 
 func connect(host string) *gocql.Session {
 	cluster := gocql.NewCluster(host)
-	cluster.Consistency = gocql.Any
+	cluster.Consistency = gocql.Quorum
 	session, err := cluster.CreateSession()
 	if err != nil {
 		fmt.Println("Could not create session in CASS. Err: ", err)

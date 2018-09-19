@@ -10,8 +10,11 @@ func main() {
 	go count("cats", c)
 	/* Receiver */
 	for {
-		msg := <-c
+		msg, open := <-c
 		fmt.Println(msg)
+		if !open {
+			break
+		}
 	}
 }
 

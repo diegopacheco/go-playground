@@ -29,7 +29,7 @@ func main() {
 	`)
 
 	// set any variables
-	req.Var("key", "book-1")
+	req.Var("key", "book-3")
 
 	// set header fields
 	req.Header.Set("Cache-Control", "no-cache")
@@ -43,6 +43,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Pretty print the json result
 	b, err := json.MarshalIndent(respData, "", "  ")
 	if err != nil {
 		fmt.Println("error:", err)

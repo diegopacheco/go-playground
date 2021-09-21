@@ -1,0 +1,16 @@
+syntax = "v1"
+
+type (
+	Request {
+		Name string `path:"name,options=you|me"` // parameters are auto validated
+	}
+
+	Response {
+		Message string `json:"message"`
+	}
+)
+
+service greet-api {
+	@handler GreetHandler
+	get /greet/from/:name(Request) returns (Response)
+}

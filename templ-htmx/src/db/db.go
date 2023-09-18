@@ -32,9 +32,7 @@ func (s CountStore) BatchGet(ctx context.Context, ids ...string) (counts []int, 
 		return nil, nil
 	}
 	for _, id := range ids {
-		for k := range s.db[id] {
-			counts = append(counts, idToCount[id])
-		}
+		counts = append(counts, s.db[id])
 	}
 	return
 }

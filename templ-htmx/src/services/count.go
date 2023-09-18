@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log/slog"
 	"sync"
+
+	"github.com/a-h/templ-examples/hello-world/src/db"
 )
 
 type Counts struct {

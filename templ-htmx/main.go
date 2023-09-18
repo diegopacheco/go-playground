@@ -7,28 +7,18 @@ import (
 	"os"
 	"time"
 
+	"github.com/a-h/templ-examples/hello-world/src/db"
 	"github.com/a-h/templ-examples/hello-world/src/handlers"
 	"github.com/a-h/templ-examples/hello-world/src/services"
 	"github.com/a-h/templ-examples/hello-world/src/session"
 )
 
 func main() {
-	log := slog.New(slog.NewJSONHandler(os.Stdout))
-	s, err := db.NewCountStore(os.Getenv("TABLE_NAME"), os.Getenv("AWS_REGION"))
-	if err != nil {
-		log.Error("failed to create store", slog.Any("error", err))
-		os.Exit(1)
-	}
+	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	s, _ := db.NewCountStore()
 	cs := services.NewCount(log, s)
 	h := handlers.New(log, cs)
-
-	var secureFlag bool
-	if os.Getenv("SECURE_FLAG") == "false" {
-		secureFlag = false
-	}
-
-	// Add session middleware.
-	sh := session.NewMiddleware(h, session.WithSecure(secureFlag))
+	sh := session.NewMiddleware(h, session.WithSecure(false))
 
 	server := &http.Server{
 		Addr:         "localhost:9000",

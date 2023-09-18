@@ -160,7 +160,7 @@ func Page(global, session int) templ.Component {
 		if err != nil {
 			return err
 		}
-		_, err = templBuffer.WriteString("</title><link rel=\"stylesheet\" href=\"/assets/css/bulma.min.css\"><link rel=\"icon\" type=\"image/png\" sizes=\"48x48\" href=\"/assets/favicon/favicon.ico\"><link rel=\"manifest\" href=\"/assets/favicon/site.webmanifest\"><script src=\"/assets/js/htmx.min.js\">")
+		_, err = templBuffer.WriteString("</title><link rel=\"stylesheet\" href=\"/assets/css/bulma.min.css\"><link rel=\"icon\" type=\"image/png\" sizes=\"48x48\" href=\"/assets/favicon/favicon.ico\"><link rel=\"manifest\" href=\"/assets/favicon/manifest.json\"><script src=\"/assets/js/htmx.min.js\">")
 		if err != nil {
 			return err
 		}

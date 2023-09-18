@@ -2,10 +2,18 @@ package main
 
 import (
 	"context"
-	"os"
+	"fmt"
+	"net/http"
 )
 
-func main() {
+func handleHttp(w http.ResponseWriter, r *http.Request) {
 	component := hello("John Doe")
-	component.Render(context.Background(), os.Stdout)
+	component.Render(context.Background(), w)
+}
+
+func main() {
+	http.HandleFunc("/", handleHttp)
+	fmt.Print("running on http://127.0.0.1:8080/")
+	err := http.ListenAndServe(":8080", nil)
+	_ = err
 }

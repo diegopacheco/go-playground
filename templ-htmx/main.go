@@ -2,16 +2,41 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
+	"os"
+	"time"
 
-	"github.com/a-h/templ"
-	"github.com/a-h/templ-examples/hello-world/src/components"
+	"github.com/a-h/templ-examples/hello-world/src/handlers"
+	"github.com/a-h/templ-examples/hello-world/src/services"
+	"github.com/a-h/templ-examples/hello-world/src/session"
 )
 
 func main() {
-	component := components.Page(1, 1)
-	http.Handle("/", templ.Handler(component))
+	log := slog.New(slog.NewJSONHandler(os.Stdout))
+	s, err := db.NewCountStore(os.Getenv("TABLE_NAME"), os.Getenv("AWS_REGION"))
+	if err != nil {
+		log.Error("failed to create store", slog.Any("error", err))
+		os.Exit(1)
+	}
+	cs := services.NewCount(log, s)
+	h := handlers.New(log, cs)
 
-	fmt.Println("Listening on http://127.0.0.1:8080")
-	http.ListenAndServe(":8080", nil)
+	var secureFlag bool
+	if os.Getenv("SECURE_FLAG") == "false" {
+		secureFlag = false
+	}
+
+	// Add session middleware.
+	sh := session.NewMiddleware(h, session.WithSecure(secureFlag))
+
+	server := &http.Server{
+		Addr:         "localhost:9000",
+		Handler:      sh,
+		ReadTimeout:  time.Second * 10,
+		WriteTimeout: time.Second * 10,
+	}
+
+	fmt.Printf("Listening on %v\n", server.Addr)
+	server.ListenAndServe()
 }

@@ -10,3 +10,9 @@ following htmx sample from here
 * I simplify the implementation
 * Removed dynamod DB from AWS
 * Added a in-memory implementation in Go with a hashmap
+
+## App running
+```bash
+./run.sh
+```
+<img src="working-app.png" />

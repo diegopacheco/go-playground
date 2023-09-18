@@ -27,6 +27,6 @@ func main() {
 		WriteTimeout: time.Second * 10,
 	}
 
-	fmt.Printf("Listening on %v\n", server.Addr)
+	fmt.Printf("Listening on http://%v\n", server.Addr)
 	server.ListenAndServe()
 }

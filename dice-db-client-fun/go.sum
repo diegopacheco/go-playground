@@ -1,0 +1,6 @@
+github.com/dicedb/dicedb-go v1.0.9 h1:WtXtX6Bu/KFjhnOIlnoo9Z1hbmOtL2tMrUmS6793/Pw=
+github.com/dicedb/dicedb-go v1.0.9/go.mod h1:V1fiCJnPfSObKWrOJ/zrhHEGlLwT9k3pKCto3sz1oW8=
+github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+google.golang.org/protobuf v1.36.5 h1:tPhr+woSbjfYvY6/GPufUoYizxw1cF/yFoxJ2fmpwlM=
+google.golang.org/protobuf v1.36.5/go.mod h1:9fA7Ob0pmnwhb644+1+CVWFRbNajQ6iRojtC/QF5bRE=

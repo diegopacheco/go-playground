@@ -118,8 +118,24 @@ func main() {
 		for _, img := range images {
 			if filter == "" || strings.Contains(strings.ToLower(img.Repository), strings.ToLower(filter)) ||
 				strings.Contains(strings.ToLower(img.ImageID), strings.ToLower(filter)) {
-				display := fmt.Sprintf("%-8s | %-40s | %s", img.Size, img.Repository, img.ImageID)
-				list.AddItem(display, img.Created, 0, nil)
+
+				repo := img.Repository
+				if len(repo) > 35 {
+					repo = repo[:32] + "..."
+				}
+
+				imageID := img.ImageID
+				if len(imageID) > 12 {
+					imageID = imageID[:12]
+				}
+
+				created := img.Created
+				if len(created) > 15 {
+					created = created[:12] + "..."
+				}
+
+				display := fmt.Sprintf("%-8s | %-35s | %-12s | %-15s", img.Size, repo, imageID, created)
+				list.AddItem(display, "", 0, nil)
 				filteredImages = append(filteredImages, img)
 			}
 		}

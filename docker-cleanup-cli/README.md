@@ -15,3 +15,7 @@ Docker Clean Up: Search for image(press enter to delete) <br/>
 
 Delete image: <br/>
 <img src="result-2.png" width="400" />
+
+### Fun Fact
+
+Running on my machine, was able to save `53GB` of disk space by deleting unused Docker images.

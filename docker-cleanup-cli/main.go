@@ -182,7 +182,7 @@ func main() {
 				app.SetRoot(successModal, false)
 
 				go func() {
-					time.Sleep(2 * time.Second)
+					time.Sleep(1 * time.Second)
 					app.QueueUpdateDraw(func() {
 						app.SetRoot(flex, true)
 						updateList(inputField.GetText())

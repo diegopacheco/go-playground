@@ -76,6 +76,43 @@ func parseSize(sizeStr string) int64 {
 	}
 }
 
+func deleteImage(imageID, repo string, images *[]DockerImage, filteredImages *[]DockerImage, inputField *tview.InputField, app *tview.Application, flex *tview.Flex, updateList func(string)) {
+	cmd := exec.Command("docker", "rmi", imageID)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		errorModal := tview.NewModal().
+			SetText(fmt.Sprintf("Failed to delete image %s: %v", imageID, err)).
+			AddButtons([]string{"OK"}).
+			SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+				app.SetRoot(flex, true)
+			})
+		app.SetRoot(errorModal, false)
+	} else {
+		for i, img := range *images {
+			if img.ImageID == imageID {
+				*images = append((*images)[:i], (*images)[i+1:]...)
+				break
+			}
+		}
+
+		successModal := tview.NewModal().
+			SetText(fmt.Sprintf("Image %s %s deleted", repo, imageID[:12])).
+			SetBackgroundColor(tcell.ColorGreen)
+
+		app.SetRoot(successModal, false)
+
+		go func() {
+			time.Sleep(2 * time.Second)
+			app.QueueUpdateDraw(func() {
+				app.SetRoot(flex, true)
+				updateList(inputField.GetText())
+			})
+		}()
+	}
+}
+
 func main() {
 	cmd := exec.Command("docker", "images")
 	var out bytes.Buffer
@@ -95,22 +132,6 @@ func main() {
 		SetFieldWidth(50)
 
 	list := tview.NewList()
-
-	inputField.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == tcell.KeyDown || event.Key() == tcell.KeyUp {
-			app.SetFocus(list)
-			return event
-		}
-		return event
-	})
-
-	list.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == tcell.KeyCtrlF {
-			app.SetFocus(inputField)
-			return nil
-		}
-		return event
-	})
 
 	updateList := func(filter string) {
 		list.Clear()
@@ -147,48 +168,40 @@ func main() {
 		updateList(text)
 	})
 
+	inputField.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyDown || event.Key() == tcell.KeyUp {
+			app.SetFocus(list)
+			return event
+		}
+		return event
+	})
+
 	flex := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(inputField, 1, 0, true).
 		AddItem(list, 0, 1, true)
+
+	list.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyCtrlF {
+			app.SetFocus(inputField)
+			return nil
+		}
+		if event.Key() == tcell.KeyDelete || event.Key() == tcell.KeyBackspace2 {
+			currentIndex := list.GetCurrentItem()
+			if currentIndex >= 0 && currentIndex < len(filteredImages) {
+				imageID := filteredImages[currentIndex].ImageID
+				repo := filteredImages[currentIndex].Repository
+				deleteImage(imageID, repo, &images, &filteredImages, inputField, app, flex, updateList)
+			}
+			return nil
+		}
+		return event
+	})
 
 	list.SetSelectedFunc(func(index int, mainText, secondaryText string, shortcut rune) {
 		if index >= 0 && index < len(filteredImages) {
 			imageID := filteredImages[index].ImageID
 			repo := filteredImages[index].Repository
-			cmd := exec.Command("docker", "rmi", imageID)
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-			err := cmd.Run()
-			if err != nil {
-				errorModal := tview.NewModal().
-					SetText(fmt.Sprintf("Failed to delete image %s: %v", imageID, err)).
-					AddButtons([]string{"OK"}).
-					SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-						app.SetRoot(flex, true)
-					})
-				app.SetRoot(errorModal, false)
-			} else {
-				for i, img := range images {
-					if img.ImageID == imageID {
-						images = append(images[:i], images[i+1:]...)
-						break
-					}
-				}
-
-				successModal := tview.NewModal().
-					SetText(fmt.Sprintf("Image %s %s deleted", repo, imageID[:12])).
-					SetBackgroundColor(tcell.ColorGreen)
-
-				app.SetRoot(successModal, false)
-
-				go func() {
-					time.Sleep(1 * time.Second)
-					app.QueueUpdateDraw(func() {
-						app.SetRoot(flex, true)
-						updateList(inputField.GetText())
-					})
-				}()
-			}
+			deleteImage(imageID, repo, &images, &filteredImages, inputField, app, flex, updateList)
 		}
 	})
 

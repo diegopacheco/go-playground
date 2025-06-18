@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -146,15 +147,26 @@ func main() {
 		updateList(text)
 	})
 
+	flex := tview.NewFlex().SetDirection(tview.FlexRow).
+		AddItem(inputField, 1, 0, true).
+		AddItem(list, 0, 1, true)
+
 	list.SetSelectedFunc(func(index int, mainText, secondaryText string, shortcut rune) {
 		if index >= 0 && index < len(filteredImages) {
 			imageID := filteredImages[index].ImageID
+			repo := filteredImages[index].Repository
 			cmd := exec.Command("docker", "rmi", imageID)
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
 			err := cmd.Run()
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Failed to delete image %s: %v\n", imageID, err)
+				errorModal := tview.NewModal().
+					SetText(fmt.Sprintf("Failed to delete image %s: %v", imageID, err)).
+					AddButtons([]string{"OK"}).
+					SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+						app.SetRoot(flex, true)
+					})
+				app.SetRoot(errorModal, false)
 			} else {
 				for i, img := range images {
 					if img.ImageID == imageID {
@@ -162,14 +174,23 @@ func main() {
 						break
 					}
 				}
-				updateList(inputField.GetText())
+
+				successModal := tview.NewModal().
+					SetText(fmt.Sprintf("Image %s %s deleted", repo, imageID[:12])).
+					SetBackgroundColor(tcell.ColorGreen)
+
+				app.SetRoot(successModal, false)
+
+				go func() {
+					time.Sleep(2 * time.Second)
+					app.QueueUpdateDraw(func() {
+						app.SetRoot(flex, true)
+						updateList(inputField.GetText())
+					})
+				}()
 			}
 		}
 	})
-
-	flex := tview.NewFlex().SetDirection(tview.FlexRow).
-		AddItem(inputField, 1, 0, true).
-		AddItem(list, 0, 1, true)
 
 	flex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEscape {

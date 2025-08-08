@@ -27,9 +27,6 @@ func main() {
 	ExShellCmd()
 	fmt.Println()
 
-	ExBorrowChecker()
-	fmt.Println()
-
 	ExUnitTestsDemo()
 	fmt.Println()
 

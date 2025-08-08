@@ -2,7 +2,6 @@ package main
 
 import "fmt"
 
-// ExIfElse demonstrates if / else if / else with boolean conditions.
 func ExIfElse() {
 	fmt.Println("ex_if_else")
 

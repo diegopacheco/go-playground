@@ -1,0 +1,24 @@
+# Ignore version control
+.git
+.gitignore
+
+# Ignore documentation
+README.md
+*.md
+
+# Ignore development files
+.vscode/
+.idea/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.log
+
+# Ignore build artifacts (if any)
+*.out
+main
